@@ -1,4 +1,4 @@
-package jimmiez.cn;
+package cn.jimmiez.sample;
 
 /**
  * Hello world!
