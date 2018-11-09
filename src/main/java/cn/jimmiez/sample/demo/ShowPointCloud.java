@@ -2,7 +2,6 @@ package cn.jimmiez.sample.demo;
 
 import cn.jimmiez.sample.ui.PointCloudFrame;
 
-import javax.media.j3d.BranchGroup;
 import java.io.File;
 
 public class ShowPointCloud {
