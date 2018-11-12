@@ -31,7 +31,6 @@ public class PointCloud {
         if (normals.size() != points.size()) throw new IllegalStateException("normals.size() != points.size()");
     }
 
-
     private Shape3D pointsShape() {
         Shape3D shape = new Shape3D();
         shape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
