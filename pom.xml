@@ -15,7 +15,7 @@
     <repository>
       <snapshots>
         <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
+        <updatePolicy>daily</updatePolicy>
       </snapshots>
       <id>maven-snap</id>
       <name>maven-snapshot</name>

@@ -1,5 +1,6 @@
 package cn.jimmiez.sample.demo;
 
+import cn.jimmiez.pcu.alg.skel.LevelSetSkeleton;
 import cn.jimmiez.pcu.common.graphics.HoppeEstimator;
 import cn.jimmiez.pcu.io.ply.PlyReader;
 import cn.jimmiez.pcu.model.PcuPointCloud3f;
@@ -15,6 +16,9 @@ public class ShowPointCloud {
         List<float[]> points = new PlyReader().readPointCloud(plyFile, PcuPointCloud3f.class).getPoint3ds();
         PointCloud pointCloud = new PointCloud(points);
         pointCloud.estimateNormal(new HoppeEstimator());
+//        LevelSetSkeleton skel = new LevelSetSkeleton();
+//        skel.setN(8);
+//        pointCloud.skeletonize(skel);
 
         PointCloudFrame frame = new PointCloudFrame(pointCloud);
     }

@@ -1,13 +1,19 @@
 package cn.jimmiez.sample.model;
 
+import cn.jimmiez.pcu.alg.skel.Skeleton;
+import cn.jimmiez.pcu.alg.skel.Skeletonization;
+import cn.jimmiez.pcu.common.graph.Graphs;
 import cn.jimmiez.pcu.common.graphics.BoundingBox;
 import cn.jimmiez.pcu.common.graphics.NormalEstimator;
+import cn.jimmiez.pcu.model.Pair;
 import cn.jimmiez.pcu.util.PcuCommonUtil;
 
 import javax.media.j3d.*;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 public class PointCloud {
@@ -17,6 +23,9 @@ public class PointCloud {
 
     /** estimated normals of each point in point cloud **/
     private List<Vector3d> normals = null;
+
+    /** the curve skeleton of point cloud model **/
+    private Skeleton skeleton = null;
 
     private BoundingBox box = null;
 
@@ -29,6 +38,11 @@ public class PointCloud {
         System.out.println("Estimating normals, waiting ...");
         normals = estimator.estimateNormals(points);
         if (normals.size() != points.size()) throw new IllegalStateException("normals.size() != points.size()");
+    }
+
+    public <T extends Skeletonization> void skeletonize(T skeletonExtractor) {
+        System.out.println("Extracting curve skeleton, waiting ..");
+        skeleton = skeletonExtractor.skeletonize(points);
     }
 
     private Shape3D pointsShape() {
@@ -75,17 +89,55 @@ public class PointCloud {
         ca.setColor(0.66f, 0.82f, 0.55f);
         ap.setColoringAttributes(ca);
         ap.setMaterial(null);
-//        ap.setPointAttributes(new PointAttributes(config.getSkeletonCurveWidth(), false));
         ap.setLineAttributes(new LineAttributes(2, LineAttributes.PATTERN_SOLID, false));
         lines.setAppearance(ap);
         lines.setGeometry(lineArray);
         return lines;
     }
 
+    private BranchGroup skeletonShape() {
+        BranchGroup bg = new BranchGroup();
+        Shape3D lines = new Shape3D();
+        int edgeCnt = 2 * Graphs.edgesCountOf(skeleton);
+        LineArray lineArray = new LineArray(edgeCnt, LineArray.COORDINATES);
+        Point3d[] ends = new Point3d[edgeCnt];
+        Set<Pair<Integer, Integer>> set = new HashSet<>();
+        int cnt = 0;
+        for (Integer vertexIndex : skeleton.vertices()) {
+            for (Integer adjacentVertexIndex : skeleton.adjacentVertices(vertexIndex)) {
+                if (! set.contains(new Pair<>(vertexIndex, adjacentVertexIndex))) {
+                    ends[cnt ++] = skeleton.getSkeletonNodes().get(vertexIndex);
+                    ends[cnt ++] = skeleton.getSkeletonNodes().get(adjacentVertexIndex);
+                    set.add(new Pair<>(vertexIndex, adjacentVertexIndex));
+                    set.add(new Pair<>(adjacentVertexIndex, vertexIndex));
+                }
+            }
+        }
+        lineArray.setCoordinates(0, ends);
+        Appearance ap = new Appearance();
+        ColoringAttributes ca = new ColoringAttributes();
+        ca.setColor(0.9f, 0.0f, 0.f);
+        ap.setColoringAttributes(ca);
+        ap.setMaterial(null);
+        ap.setLineAttributes(new LineAttributes(4, LineAttributes.PATTERN_SOLID, false));
+        lines.setAppearance(ap);
+        lines.setGeometry(lineArray);
+
+        bg.addChild(lines);
+        return bg;
+    }
+
     public BranchGroup branchGroup() {
         BranchGroup bg = new BranchGroup();
-        bg.addChild(pointsShape());
-        bg.addChild(normalShape());
+        if (points != null) {
+            bg.addChild(pointsShape());
+        }
+        if (normals != null) {
+            bg.addChild(normalShape());
+        }
+        if (skeleton != null) {
+            bg.addChild(skeletonShape());
+        }
         return bg;
     }
 }
