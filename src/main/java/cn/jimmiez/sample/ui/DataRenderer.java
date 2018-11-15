@@ -2,11 +2,13 @@ package cn.jimmiez.sample.ui;
 
 import cn.jimmiez.pcu.alg.skeleton.Skeleton;
 import cn.jimmiez.pcu.common.graph.Graphs;
-import cn.jimmiez.pcu.common.graphics.BoundingBox;
+import cn.jimmiez.pcu.common.graphics.Octree;
 import cn.jimmiez.pcu.model.Pair;
+import cn.jimmiez.sample.shape.Cube;
 import com.sun.j3d.utils.geometry.Sphere;
 
 import javax.media.j3d.*;
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import java.util.HashSet;
@@ -39,6 +41,24 @@ public class DataRenderer {
         shape.setAppearance(ap);
 
         return shape;
+    }
+
+    public BranchGroup octreeShape(List<Octree.OctreeNode> nodes) {
+        BranchGroup bg = new BranchGroup();
+        for (Octree.OctreeNode node : nodes) {
+            double s = (node.getMaxX() - node.getMinX()) / 2;
+            Matrix4d m = new Matrix4d(new double[] {
+                    s, 0, 0, (node.getMaxX() + node.getMinX()) / 2,
+                    0, s, 0, (node.getMaxY() + node.getMinY()) / 2,
+                    0, 0, s, (node.getMaxZ() + node.getMinZ()) / 2,
+                    0, 0, 0, 1
+            });
+            TransformGroup tg = new TransformGroup(new Transform3D(m));
+            // bg -> tg -> cubeShape
+            tg.addChild(createCube());
+            bg.addChild(tg);
+        }
+        return bg;
     }
 
     public BranchGroup skeletonShape(Skeleton skeleton) {
@@ -92,5 +112,18 @@ public class DataRenderer {
             bg.addChild(tg);
         }
         return bg;
+    }
+
+    private Cube createCube() {
+        Appearance ap = new Appearance();
+        ColoringAttributes ca = new ColoringAttributes();
+        ca.setColor(0.0f, 0.0f, 0.9f);
+        ap.setColoringAttributes(ca);
+        ap.setMaterial(null);
+        ap.setPolygonAttributes(new PolygonAttributes(PolygonAttributes.POLYGON_LINE, PolygonAttributes.CULL_BACK, 0));
+        ap.setLineAttributes(new LineAttributes(1, LineAttributes.PATTERN_SOLID, false));
+        Cube cube = new Cube();
+        cube.setAppearance(ap);
+        return cube;
     }
 }

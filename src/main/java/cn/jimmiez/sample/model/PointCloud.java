@@ -1,9 +1,11 @@
 package cn.jimmiez.sample.model;
 
 import cn.jimmiez.pcu.alg.normal.NormalEstimator;
+import cn.jimmiez.pcu.alg.projector.OctreeVoxelizer;
 import cn.jimmiez.pcu.alg.skeleton.Skeleton;
 import cn.jimmiez.pcu.alg.skeleton.Skeletonization;
 import cn.jimmiez.pcu.common.graphics.BoundingBox;
+import cn.jimmiez.pcu.common.graphics.Octree;
 import cn.jimmiez.pcu.util.PcuCommonUtil;
 import cn.jimmiez.sample.ui.DataRenderer;
 
@@ -23,6 +25,9 @@ public class PointCloud {
     /** the curve skeleton of point cloud model **/
     private Skeleton skeleton = null;
 
+    /** the voxelized result **/
+    private List<Octree.OctreeNode> voxels = null;
+
     private BoundingBox box = null;
 
     public PointCloud(List<float[]> points3f) {
@@ -30,14 +35,19 @@ public class PointCloud {
         box = BoundingBox.of(points);
     }
 
+    public void voxelize(OctreeVoxelizer voxelizer) {
+        System.out.println("Voxelizing ... Please wait ...");
+        voxels = voxelizer.voxelize(points, 6);
+    }
+
     public <T extends NormalEstimator> void estimateNormal(T estimator) {
-        System.out.println("Estimating normals, waiting ...");
+        System.out.println("Estimating normals ... Please wait ...");
         normals = estimator.estimateNormals(points);
         if (normals.size() != points.size()) throw new IllegalStateException("normals.size() != points.size()");
     }
 
     public <T extends Skeletonization> void skeletonize(T skeletonExtractor) {
-        System.out.println("Extracting curve skeleton, waiting ..");
+        System.out.println("Extracting curve skeleton ... Please wait ..");
         skeleton = skeletonExtractor.skeletonize(points);
     }
 
@@ -78,6 +88,9 @@ public class PointCloud {
         }
         if (skeleton != null) {
             bg.addChild(renderer.skeletonShape(skeleton));
+        }
+        if (voxels != null) {
+            bg.addChild(renderer.octreeShape(voxels));
         }
         return bg;
     }
