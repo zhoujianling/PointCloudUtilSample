@@ -4,6 +4,7 @@ import cn.jimmiez.pcu.alg.normal.NormalEstimator;
 import cn.jimmiez.pcu.alg.projector.OctreeVoxelizer;
 import cn.jimmiez.pcu.alg.skeleton.Skeleton;
 import cn.jimmiez.pcu.alg.skeleton.Skeletonization;
+import cn.jimmiez.pcu.common.graph.GraphStatic;
 import cn.jimmiez.pcu.common.graphics.BoundingBox;
 import cn.jimmiez.pcu.common.graphics.Octree;
 import cn.jimmiez.pcu.util.PcuCommonUtil;
@@ -24,6 +25,9 @@ public class PointCloud {
 
     /** the curve skeleton of point cloud model **/
     private Skeleton skeleton = null;
+
+    /** k-nearest-neighbor graph **/
+    private GraphStatic neighborhoodGraph = null;
 
     /** the voxelized result **/
     private List<Octree.OctreeNode> voxels = null;
@@ -88,6 +92,9 @@ public class PointCloud {
         }
         if (skeleton != null) {
             bg.addChild(renderer.skeletonShape(skeleton));
+        }
+        if (neighborhoodGraph != null) {
+            bg.addChild(renderer.graphShape(points, neighborhoodGraph));
         }
         if (voxels != null) {
             bg.addChild(renderer.octreeShape(voxels));

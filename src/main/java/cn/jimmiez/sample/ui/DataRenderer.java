@@ -1,6 +1,7 @@
 package cn.jimmiez.sample.ui;
 
 import cn.jimmiez.pcu.alg.skeleton.Skeleton;
+import cn.jimmiez.pcu.common.graph.GraphStatic;
 import cn.jimmiez.pcu.common.graph.Graphs;
 import cn.jimmiez.pcu.common.graphics.Octree;
 import cn.jimmiez.pcu.model.Pair;
@@ -58,6 +59,66 @@ public class DataRenderer {
             tg.addChild(createCube());
             bg.addChild(tg);
         }
+        return bg;
+    }
+
+    // not been tested
+    public BranchGroup graphShape(List<Point3d> points, GraphStatic graphStatic) {
+        BranchGroup bg = new BranchGroup();
+
+        // nodes of graph
+        Shape3D nodeShape = new Shape3D();
+        nodeShape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
+        PointArray pa = new PointArray(points.size(), PointArray.COORDINATES);
+        Point3d[] pointArray = new Point3d[points.size()];
+        for (int i = 0; i < points.size(); i ++) {
+            pointArray[i] = points.get(i);
+        }
+        pa.setCoordinates(0, pointArray);
+        nodeShape.setGeometry(pa);
+        Appearance ap = new Appearance();
+
+        ColoringAttributes ca = new ColoringAttributes();
+
+        ap.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
+        ca.setColor(.9f, .0f, .0f);
+
+        ap.setColoringAttributes(ca);
+        ap.setMaterial(null);
+        ap.setPolygonAttributes(new PolygonAttributes(PolygonAttributes.POLYGON_POINT, PolygonAttributes.CULL_BACK, 0));
+        ap.setPointAttributes(new PointAttributes(5, false));
+        nodeShape.setAppearance(ap);
+
+        // edges of graph
+        Shape3D lineShape = new Shape3D();
+        int edgeCnt = Graphs.edgesCountOf(graphStatic);
+        LineArray lineArray = new LineArray(edgeCnt, LineArray.COORDINATES);
+        Point3d[] ends = new Point3d[edgeCnt];
+        int cnt = 0;
+
+        Set<Pair<Integer, Integer>> set = new HashSet<>();
+        for (Integer vertexIndex : graphStatic.vertices()) {
+            for (Integer adjacentVertexIndex : graphStatic.adjacentVertices(vertexIndex)) {
+                if (! set.contains(new Pair<>(vertexIndex, adjacentVertexIndex))) {
+                    ends[cnt ++] = points.get(vertexIndex);
+                    ends[cnt ++] = points.get(adjacentVertexIndex);
+                    set.add(new Pair<>(vertexIndex, adjacentVertexIndex));
+                    set.add(new Pair<>(adjacentVertexIndex, vertexIndex));
+                }
+            }
+        }
+        lineArray.setCoordinates(0, ends);
+        Appearance ap2 = new Appearance();
+        ColoringAttributes ca2 = new ColoringAttributes();
+        ca.setColor(0.0f, 1.0f, 0.f);
+        ap.setColoringAttributes(ca2);
+        ap.setMaterial(null);
+        ap.setLineAttributes(new LineAttributes(8, LineAttributes.PATTERN_SOLID, false));
+        lineShape.setAppearance(ap2);
+        lineShape.setGeometry(lineArray);
+
+        bg.addChild(nodeShape);
+        bg.addChild(lineShape);
         return bg;
     }
 
