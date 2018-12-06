@@ -4,7 +4,7 @@ import cn.jimmiez.pcu.alg.skeleton.Skeleton;
 import cn.jimmiez.pcu.common.graph.GraphStatic;
 import cn.jimmiez.pcu.common.graph.Graphs;
 import cn.jimmiez.pcu.common.graphics.Octree;
-import cn.jimmiez.pcu.model.Pair;
+import cn.jimmiez.pcu.util.Pair;
 import cn.jimmiez.sample.shape.Cube;
 import com.sun.j3d.utils.geometry.Sphere;
 
@@ -47,11 +47,11 @@ public class DataRenderer {
     public BranchGroup octreeShape(List<Octree.OctreeNode> nodes) {
         BranchGroup bg = new BranchGroup();
         for (Octree.OctreeNode node : nodes) {
-            double s = (node.getMaxX() - node.getMinX()) / 2;
+            double s = node.getxExtent();
             Matrix4d m = new Matrix4d(new double[] {
-                    s, 0, 0, (node.getMaxX() + node.getMinX()) / 2,
-                    0, s, 0, (node.getMaxY() + node.getMinY()) / 2,
-                    0, 0, s, (node.getMaxZ() + node.getMinZ()) / 2,
+                    s, 0, 0, node.getCenter().x,
+                    0, s, 0, node.getCenter().y,
+                    0, 0, s, node.getCenter().z,
                     0, 0, 0, 1
             });
             TransformGroup tg = new TransformGroup(new Transform3D(m));
