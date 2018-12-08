@@ -1,17 +1,10 @@
 package cn.jimmiez.sample.ui;
 
-import cn.jimmiez.pcu.io.ply.PlyReader;
-import cn.jimmiez.pcu.model.PcuPointCloud3f;
-import cn.jimmiez.pcu.util.PcuArrayUtil;
-import cn.jimmiez.pcu.util.PcuCommonUtil;
 import cn.jimmiez.sample.model.PointCloud;
 
 import javax.media.j3d.*;
 import javax.swing.*;
-import javax.vecmath.Point3d;
 import java.awt.*;
-import java.io.File;
-import java.util.List;
 
 public class PointCloudFrame extends JFrame {
 

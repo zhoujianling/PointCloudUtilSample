@@ -14,7 +14,7 @@ import java.util.List;
 public class ShowPointCloud {
     public static void main(String[] args) {
         File plyFile = new File(ShowPointCloud.class.getClassLoader().getResource("Y.ply").getFile());
-        List<float[]> points = new PlyReader().readPointCloud(plyFile, PointCloud3f.class).getPoints();
+        List<float[]> points = new PlyReader().read(plyFile, PointCloud3f.class).getPoints();
         PointCloud pointCloud = new PointCloud(points);
         pointCloud.estimateNormal(new HoppeEstimator());
         LevelSetSkeleton skel = new LevelSetSkeleton();
