@@ -1,7 +1,7 @@
 package cn.jimmiez.sample.model;
 
 import cn.jimmiez.pcu.alg.normal.NormalEstimator;
-import cn.jimmiez.pcu.alg.projector.OctreeVoxelizer;
+import cn.jimmiez.pcu.alg.sampler.OctreeVoxelizer;
 import cn.jimmiez.pcu.alg.skeleton.Skeleton;
 import cn.jimmiez.pcu.alg.skeleton.Skeletonization;
 import cn.jimmiez.pcu.common.graph.GraphStatic;
@@ -41,7 +41,7 @@ public class PointCloud {
 
     public void voxelize(OctreeVoxelizer voxelizer) {
         System.out.println("Voxelizing ... Please wait ...");
-        voxels = voxelizer.voxelize(points, 6);
+        voxels = voxelizer.voxelize(points, 21);
     }
 
     public <T extends NormalEstimator> void estimateNormal(T estimator) {
