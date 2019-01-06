@@ -2,9 +2,9 @@ package cn.jimmiez.sample.model;
 
 import cn.jimmiez.pcu.alg.normal.NormalEstimator;
 import cn.jimmiez.pcu.alg.sampler.OctreeVoxelizer;
-import cn.jimmiez.pcu.alg.skeleton.Skeleton;
+import cn.jimmiez.pcu.model.Skeleton;
 import cn.jimmiez.pcu.alg.skeleton.Skeletonization;
-import cn.jimmiez.pcu.common.graph.GraphStatic;
+import cn.jimmiez.pcu.common.graph.BaseGraph;
 import cn.jimmiez.pcu.common.graphics.BoundingBox;
 import cn.jimmiez.pcu.common.graphics.Octree;
 import cn.jimmiez.pcu.util.PcuCommonUtil;
@@ -27,7 +27,7 @@ public class PointCloud {
     private Skeleton skeleton = null;
 
     /** k-nearest-neighbor graph **/
-    private GraphStatic neighborhoodGraph = null;
+    private BaseGraph neighborhoodGraph = null;
 
     /** the voxelized result **/
     private List<Octree.OctreeNode> voxels = null;

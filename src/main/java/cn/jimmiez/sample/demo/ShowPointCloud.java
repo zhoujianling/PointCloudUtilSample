@@ -20,8 +20,8 @@ public class ShowPointCloud {
         LevelSetSkeleton skel = new LevelSetSkeleton();
         skel.setN(15);
         skel.setK(20);
-//        pointCloud.skeletonize(skel);
-        pointCloud.voxelize(new OctreeVoxelizer());
+        pointCloud.skeletonize(skel);
+//        pointCloud.voxelize(new OctreeVoxelizer());
 
         PointCloudFrame frame = new PointCloudFrame(pointCloud);
     }

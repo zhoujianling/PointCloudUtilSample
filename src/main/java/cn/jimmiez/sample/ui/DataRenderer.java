@@ -1,7 +1,7 @@
 package cn.jimmiez.sample.ui;
 
-import cn.jimmiez.pcu.alg.skeleton.Skeleton;
-import cn.jimmiez.pcu.common.graph.GraphStatic;
+import cn.jimmiez.pcu.model.Skeleton;
+import cn.jimmiez.pcu.common.graph.BaseGraph;
 import cn.jimmiez.pcu.common.graph.Graphs;
 import cn.jimmiez.pcu.common.graphics.Octree;
 import cn.jimmiez.pcu.util.Pair;
@@ -12,6 +12,7 @@ import javax.media.j3d.*;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import java.awt.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -63,7 +64,7 @@ public class DataRenderer {
     }
 
     // not been tested
-    public BranchGroup graphShape(List<Point3d> points, GraphStatic graphStatic) {
+    public BranchGroup graphShape(List<Point3d> points, BaseGraph graphStatic) {
         BranchGroup bg = new BranchGroup();
 
         // nodes of graph
@@ -125,7 +126,7 @@ public class DataRenderer {
     public BranchGroup skeletonShape(Skeleton skeleton) {
         BranchGroup bg = new BranchGroup();
         Shape3D lineShape = new Shape3D();
-        int edgeCnt = 2 * Graphs.edgesCountOf(skeleton);
+        int edgeCnt = Graphs.edgesCountOf(skeleton);
         LineArray lineArray = new LineArray(edgeCnt, LineArray.COORDINATES);
         Point3d[] ends = new Point3d[edgeCnt];
         Set<Pair<Integer, Integer>> set = new HashSet<>();
@@ -133,8 +134,8 @@ public class DataRenderer {
         for (Integer vertexIndex : skeleton.vertices()) {
             for (Integer adjacentVertexIndex : skeleton.adjacentVertices(vertexIndex)) {
                 if (! set.contains(new Pair<>(vertexIndex, adjacentVertexIndex))) {
-                    ends[cnt ++] = skeleton.getSkeletonNodes().get(vertexIndex);
-                    ends[cnt ++] = skeleton.getSkeletonNodes().get(adjacentVertexIndex);
+                    ends[cnt ++] = skeleton.getVertex(vertexIndex);
+                    ends[cnt ++] = skeleton.getVertex(adjacentVertexIndex);
                     set.add(new Pair<>(vertexIndex, adjacentVertexIndex));
                     set.add(new Pair<>(adjacentVertexIndex, vertexIndex));
                 }
@@ -163,7 +164,8 @@ public class DataRenderer {
         bg.addChild(lineShape);
 
         Transform3D transform3D = new Transform3D();
-        for (Point3d point : skeleton.getSkeletonNodes()) {
+        for (int id : skeleton.vertices()) {
+            Point3d point = skeleton.getVertex(id);
             TransformGroup tg = new TransformGroup();
             transform3D.set(new Vector3d(point.x, point.y, point.z));
             Sphere nodeShape = new Sphere(0.009f );
