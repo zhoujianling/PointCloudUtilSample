@@ -18,31 +18,6 @@ public class PointCloudFrame extends JFrame {
     private BranchGroup createScene(PointCloud pointCloud) {
         BranchGroup bg = new BranchGroup();
         bg.addChild(pointCloud.branchGroup());
-//        if (points.size() < 1) return bg;
-//        Shape3D shape = new Shape3D();
-//        shape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
-//        PointArray pa = new PointArray(points.size(), PointArray.COORDINATES);
-//        Point3d[] pointArray = new Point3d[points.size()];
-//        for (int i = 0; i < points.size(); i ++) {
-//            float[] fs = points.get(i);
-//            pointArray[i] = new Point3d(fs[0], fs[1], fs[2]);
-//        }
-//        pa.setCoordinates(0, pointArray);
-//        shape.setGeometry(pa);
-//        Appearance ap = new Appearance();
-//
-//        ColoringAttributes ca = new ColoringAttributes();
-//
-//        ap.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
-//        ca.setColor(.5f, .5f, .5f);
-//
-//        ap.setColoringAttributes(ca);
-//        ap.setMaterial(null);
-//        ap.setPolygonAttributes(new PolygonAttributes(PolygonAttributes.POLYGON_POINT, PolygonAttributes.CULL_BACK, 0));
-//        ap.setPointAttributes(new PointAttributes(3, false));
-//        shape.setAppearance(ap);
-//
-//        bg.addChild(shape);
         return bg;
     }
 }

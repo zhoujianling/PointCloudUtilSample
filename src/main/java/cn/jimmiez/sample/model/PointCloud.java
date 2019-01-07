@@ -39,6 +39,11 @@ public class PointCloud {
         box = BoundingBox.of(points);
     }
 
+    public PointCloud(List<Point3d> points, int placeHolder) {
+        this.points = points;
+        box = BoundingBox.of(points);
+    }
+
     public void voxelize(OctreeVoxelizer voxelizer) {
         System.out.println("Voxelizing ... Please wait ...");
         voxels = voxelizer.voxelize(points, 21);
@@ -100,5 +105,9 @@ public class PointCloud {
             bg.addChild(renderer.octreeShape(voxels));
         }
         return bg;
+    }
+
+    public List<Point3d> getPoints() {
+        return points;
     }
 }
