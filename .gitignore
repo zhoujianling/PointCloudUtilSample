@@ -4,5 +4,6 @@
 *.iml
 out/
 target/
+excluded/
 META-INF/
 
