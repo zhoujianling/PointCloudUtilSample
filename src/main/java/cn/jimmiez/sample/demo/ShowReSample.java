@@ -27,8 +27,8 @@ public class ShowReSample {
 
         PointCloud pointCloud2 = new PointCloud(samples, 0);
 
-        PointCloudFrame frame = new PointCloudFrame(pointCloud);
-        PointCloudFrame frame2 = new PointCloudFrame(pointCloud2);
+        new PointCloudFrame().init(pointCloud);
+        new PointCloudFrame().init(pointCloud2);
     }
 
 }

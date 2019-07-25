@@ -9,6 +9,7 @@ import cn.jimmiez.sample.shape.Cube;
 import com.sun.j3d.utils.geometry.Sphere;
 
 import javax.media.j3d.*;
+import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -19,7 +20,16 @@ import java.util.Set;
 
 public class DataRenderer {
 
-    public Shape3D pointsShape(List<Point3d> points) {
+    /**
+     * render the point cloud
+     * @param points the point cloud
+     * @param color the color of point cloud, can be null
+     * @param pointSize the size of a point
+     * @return the shape3d node in j3d
+     */
+    public Shape3D pointsShape(List<Point3d> points, Color3f color, Integer pointSize) {
+        if (color == null) color = new Color3f(0.5f, 0.5f, 0.5f);
+        if (pointSize == null) pointSize = 2;
         Shape3D shape = new Shape3D();
         shape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
         PointArray pa = new PointArray(points.size(), PointArray.COORDINATES);
@@ -34,12 +44,12 @@ public class DataRenderer {
         ColoringAttributes ca = new ColoringAttributes();
 
         ap.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
-        ca.setColor(.5f, .5f, .5f);
+        ca.setColor(color.x, color.y, color.z);
 
         ap.setColoringAttributes(ca);
         ap.setMaterial(null);
         ap.setPolygonAttributes(new PolygonAttributes(PolygonAttributes.POLYGON_POINT, PolygonAttributes.CULL_BACK, 0));
-        ap.setPointAttributes(new PointAttributes(3, false));
+        ap.setPointAttributes(new PointAttributes(pointSize, false));
         shape.setAppearance(ap);
 
         return shape;

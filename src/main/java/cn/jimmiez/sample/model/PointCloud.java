@@ -90,7 +90,7 @@ public class PointCloud {
         BranchGroup bg = new BranchGroup();
         DataRenderer renderer = new DataRenderer();
         if (points != null) {
-            bg.addChild(renderer.pointsShape(points));
+            bg.addChild(renderer.pointsShape(points, null, null));
         }
         if (normals != null) {
             bg.addChild(normalShape());

@@ -5,13 +5,19 @@ import cn.jimmiez.sample.model.PointCloud;
 import javax.media.j3d.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PointCloudFrame extends JFrame {
 
-    public PointCloudFrame(PointCloud pointCloud) {
+    private List<Node> extraBranchGroups = new ArrayList<>();
+
+    public void init(PointCloud pointCloud) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(new Dimension((int)(screenSize.height * 0.75), (int)(screenSize.height * 0.75)));
-        add(new MainCanvas(createScene(pointCloud)));
+        BranchGroup branchGroups = createScene(pointCloud);
+        for (Node bg : extraBranchGroups) branchGroups.addChild(bg);
+        add(new MainCanvas(branchGroups));
         setVisible(true);
     }
 
@@ -20,4 +26,6 @@ public class PointCloudFrame extends JFrame {
         bg.addChild(pointCloud.branchGroup());
         return bg;
     }
+
+    public List<Node> getExtraBranchGroups() {return this.extraBranchGroups;}
 }
